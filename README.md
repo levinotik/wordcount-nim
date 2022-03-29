@@ -1,0 +1,1 @@
+A re-implementation of the unix `wc` command written in Nim
