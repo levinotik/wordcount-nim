@@ -44,7 +44,6 @@ proc runCommand(parser: OptParser) =
             case kind
             of cmdArgument:
                 fileName = key
-                echo "you want me to count using file: ", key
             of cmdLongOption, cmdShortOption:
                 case key
                 of "w":
