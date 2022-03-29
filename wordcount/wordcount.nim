@@ -19,7 +19,7 @@ The following options are available:
     echo usage
 
 proc countWords*(s: string): int =
-    len(s.split(" "))
+    len(s.split({' ', '\t', '\n'}))
 
 proc runCommand(parser: OptParser) =
     var 
@@ -31,6 +31,7 @@ proc runCommand(parser: OptParser) =
         fileName: string
         commandOutput: string
         lineCount: int
+        wordCount: int
     
     for kind, key, val in getOpt():
         case key
@@ -62,8 +63,16 @@ proc runCommand(parser: OptParser) =
             else: discard
     if countLines:
         for line in lines(memfiles.open(fileName)):
+            if countWords:
+                inc(wordCount, countWords(line))
             inc(lineCount)
-    echo lineCount, " ", fileName
+    commandOutput.add("\t")
+    if countLines:
+        commandOutput.add(intToStr(lineCount))
+    if countWords:
+        commandOutput.add("\t" & intToStr(wordCount))
+    commandOutput.add("\t" & fileName)
+    echo commandOutput
 
 
 when isMainModule:
