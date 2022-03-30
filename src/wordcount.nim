@@ -1,19 +1,19 @@
-import os, strutils, std/parseopt, memfiles
-
+import std/[strformat, strutils, parseopt], memfiles, os
+const synopsis = "wordcount [-clmw] [file ...]"
 proc printUsage() =
-    const usage = """
+    const usage = fmt"""
 NAME
- wc – word, line, character, and byte count
+ wordcount – word, line, character, and byte count
 SYNOPSIS
- wc [-clmw] [file ...]
+ {synopsis}
 
 The following options are available:
 -c      The number of bytes in each input file is written to the standard output.  This will cancel out any
-        prior usage of the -m o
--l      The number of lines in each input file is written to the standard o
+        prior usage of the -m option.
+-l      The number of lines in each input file is written to the standard output.
 -m      The number of characters in each input file is written to the standard output.  If the current locale
         does not support multibyte characters, this is equivalent to the -c option.  This will cancel out any
-        prior usage of the -c o
+        prior usage of the -c option.
 -w      The number of words in each input file is written to the standard output. 
     """
     echo usage
@@ -23,16 +23,9 @@ proc countWords*(s: string): int =
 
 proc runCommand(parser: OptParser) =
     var 
-        helpShowed: bool
-        countBytes: bool
-        countLines: bool
-        countChars: bool
-        countWords: bool
-        fileName: string
-        commandOutput: string
-        lineCount: int
-        wordCount: int
-    
+        helpShowed, countBytes, countLines, countChars, countWords: bool
+        fileName, commandOutput: string
+        lineCount, wordCount: int
     for kind, key, val in getOpt():
         case key
         of "h", "help":
@@ -58,8 +51,8 @@ proc runCommand(parser: OptParser) =
                     countBytes = true
                     countChars = false
                 else:
-                    echo "illegal option --", key
-                    break
+                    let errorMessage = &"illegal option -- {key}\n{synopsis}"
+                    quit(errorMessage)
             else: discard
     if countLines:
         for line in lines(memfiles.open(fileName)):

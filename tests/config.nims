@@ -1,1 +1,1 @@
-switch("path", "$projectDir/../wordcount")
+switch("path", "$projectDir/../src")

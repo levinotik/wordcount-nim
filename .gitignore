@@ -3,3 +3,4 @@ nimblecache/
 htmldocs/
 *.out
 wordcount/wordcount
+wordcount
